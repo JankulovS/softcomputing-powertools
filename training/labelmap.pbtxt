@@ -1,1 +1,19 @@
+item {
+  id: 1
+  name: 'aku busilica'
+}
 
+item {
+  id: 2
+  name: 'elektro busilica'
+}
+
+item {
+  id: 3
+  name: 'aku brusilica'
+}
+
+item {
+  id: 4
+  name: 'elektro brusilica'
+}
