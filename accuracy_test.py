@@ -122,7 +122,7 @@ for filename in os.listdir(dir_path):
 
 total_averaged_accuracy = accumulated_accuracy / number_of_tests
 
-print("Total test accuracy: " + str(total_averaged_accuracy) + "%")
+print("Total test accuracy: " + str(total_averaged_accuracy * 100) + "%")
 
 
 #image = cv2.imread(PATH_TO_IMAGE)
