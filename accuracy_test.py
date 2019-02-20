@@ -23,6 +23,20 @@ import tensorflow as tf
 import sys
 from lxml import objectify
 
+def convert(name):
+    if(name == "aku busilica"):
+        return 1
+    if(name == "elektro busilica"):
+        return 2
+    if(name == "aku busilica"):
+        return 3
+    if(name == "elektro brusilica"):
+        return 4
+    if(name == "aku ubodna testera"):
+        return 5
+    if(name == "elektro ubodna testera"):
+        return 6
+
 # This is needed since the notebook is stored in the object_detection folder.
 sys.path.append("..")
 
@@ -94,6 +108,10 @@ num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 accumulated_accuracy = 0;
 number_of_tests = 0;
 
+found = 0
+not_found = 0
+wrong_classification = 0
+
 dir_path = os.getcwd() + "/images/test"
 for filename in os.listdir(dir_path):
     # If the images are not .JPG images, change the line below to match the image type.
@@ -106,6 +124,7 @@ for filename in os.listdir(dir_path):
         data=myfile.read()
         xml_object = objectify.fromstring(data)
         image = cv2.imread(dir_path + "/" + filename)
+        hight, width, channels = image.shape
         image_expanded = np.expand_dims(image, axis=0)
         (boxes, scores, classes, num) = sess.run(
             [detection_boxes, detection_scores, detection_classes, num_detections],
@@ -118,11 +137,49 @@ for filename in os.listdir(dir_path):
         partial_accuracy_correct_numbers = 1 - (abs(len(xml_object.object) - no_of_found) / len(xml_object.object))
         number_of_tests = number_of_tests + 1
         accumulated_accuracy = accumulated_accuracy + partial_accuracy_correct_numbers
-		
+
+        coordinates_of_found = np.array(boxes[0][0:no_of_found]) * np.array([hight, width, hight, width])
+        actual_coordinates = []
+        for i in range(len(xml_object.object)):
+            actual_coordinates.append(np.array([int(xml_object.object[i].bndbox.ymin), int(xml_object.object[i].bndbox.xmin), int(xml_object.object[i].bndbox.ymax), int(xml_object.object[i].bndbox.xmax)]))
+
+        # ymin xmin ymax xmax
+
+        no_of_actual_coordinates = len(actual_coordinates)
+
+        for i in range(no_of_actual_coordinates):
+            index = 0
+            overlap_pocentage = 0
+            my_area = (xml_object.object[i].bndbox.xmax - xml_object.object[i].bndbox.xmin)*(xml_object.object[i].bndbox.ymax - xml_object.object[i].bndbox.ymin)
+            for j in range(no_of_found):
+                overlap_area = max(0, min(xml_object.object[i].bndbox.xmax, coordinates_of_found[j][3]) - max(xml_object.object[i].bndbox.xmin, coordinates_of_found[j][1])) * max(0, min(xml_object.object[i].bndbox.ymax, coordinates_of_found[i][2]) - max(xml_object.object[i].bndbox.ymin, coordinates_of_found[i][0]))
+                #overlap_area = max(0, min(253, 267.8) - max(1, 3.7)) * max(0, min(623, 617) - max(255, 253.5))
+                overlap_pocentage_new = overlap_area / my_area
+                if overlap_pocentage_new > overlap_pocentage:
+                    index = j
+                    overlap_pocentage = overlap_pocentage_new
+            if(overlap_pocentage > 0.75):
+                found = found + 1
+                if not(convert(xml_object.object[i].name) == scores[0][j]):
+                    wrong_classification = wrong_classification + 1  
+            else:
+                not_found = not_found + 1
+        
 
 total_averaged_accuracy = accumulated_accuracy / number_of_tests
 
-print("Total test accuracy: " + str(total_averaged_accuracy * 100) + "%")
+print("Counting accuracy: " + str(total_averaged_accuracy * 100) + "%")
+
+'''print("found: " + str(found))
+print("not found: " + str(not_found))
+print("wrong_classification: " + str(wrong_classification))'''
+found_accuracy = float(found)/(found + not_found)
+print("Found accuracy: " + str(found_accuracy * 100) + "%")
+
+
+
+print("Total test accuracy: " + str(((found_accuracy + total_averaged_accuracy) * 100)/2) + "%")
+
 
 
 #image = cv2.imread(PATH_TO_IMAGE)
@@ -148,7 +205,7 @@ print("Total test accuracy: " + str(total_averaged_accuracy * 100) + "%")
 #    if(scores[0][i] < 0.80):
 #        break
 #    no_of_found = no_of_found + 1
-	
+    
 #partial_accuracy_correct_numbers = 1 - (abs(len(xml_object.object) - no_of_found) / len(xml_object.object))
 #print (partial_accuracy_correct_numbers)
 
