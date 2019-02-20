@@ -146,7 +146,7 @@ for filename in os.listdir(dir_path):
             overlap_pocentage = 0
             my_area = (xml_object.object[i].bndbox.xmax - xml_object.object[i].bndbox.xmin)*(xml_object.object[i].bndbox.ymax - xml_object.object[i].bndbox.ymin)
             for j in range(no_of_found):
-                overlap_area = max(0, min(xml_object.object[i].bndbox.xmax, coordinates_of_found[j][3]) - max(xml_object.object[i].bndbox.xmin, coordinates_of_found[j][1])) * max(0, min(xml_object.object[i].bndbox.ymax, coordinates_of_found[i][2]) - max(xml_object.object[i].bndbox.ymin, coordinates_of_found[i][0]))
+                overlap_area = max(0, min(xml_object.object[i].bndbox.xmax, coordinates_of_found[j][3]) - max(xml_object.object[i].bndbox.xmin, coordinates_of_found[j][1])) * max(0, min(xml_object.object[i].bndbox.ymax, coordinates_of_found[j][2]) - max(xml_object.object[i].bndbox.ymin, coordinates_of_found[j][0]))
                 #overlap_area = max(0, min(253, 267.8) - max(1, 3.7)) * max(0, min(623, 617) - max(255, 253.5))
                 overlap_pocentage_new = overlap_area / my_area
                 if overlap_pocentage_new > overlap_pocentage:
