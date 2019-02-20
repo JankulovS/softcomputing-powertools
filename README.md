@@ -30,6 +30,8 @@ Trenirano na Ryzen 5 1500X, GTX 960 4GB
 # Pokretanje već treniranog detektora
 
 Skinuti tensorflow models github repozitorijum sa https://github.com/tensorflow/models i ekstraktovati ga u željeni folder, nakon toga skinuti ovaj repozitorijum i ekstraktovati ga u models/research/object_detection.  
+  
+Postoje dva istrenirana detektora, jedan namenjen za detekciju tipa alata, a drugi za detekciju proizvođača. Potrebni fajlovi se nalaze na google-drive-u u dva različita foldera. Skinuti fajlove iz foldera odabranog detektora.
 
 Skinuti folder 'training' sa https://drive.google.com/drive/folders/1GS79qu6LL9NgS32D7HtUZ-FvdqGwj4Ny i postaviti ga u models/research/object_detection, takođe skinuti folder 'inference_graph' i njega postaviti u models/research/object_detection.  
 
@@ -46,7 +48,7 @@ Uneti komandu 'idle' u konzolu kako bi se otvorio novi python shell, otvoriti pr
 
 Ako je sve u redu, nakon desetak sekundi otvoriće se novi prozor sa slikom i označenim alatom. Za drugu ulaznu sliku potrebno je samo promeniti konstantu IMAGE_NAME u odgovarajuću sliku koja se nalazi u folderu skripte i ponovo pokrenuti skriptu, takođe radi na .png formatu.  
 
-Za računanje accuracy istrenirane mreže nad test skupom pokrenuti accuracy_test.py preko konzole. Računanje traje nekoliko minuta, nakon čega će biti ispisana na konzoli.
+Za računanje accuracy istrenirane mreže nad test skupom pokrenuti accuracy_test.py preko konzole za slučaj detektora alata, a za detektora proizvođača pokrenuti accuracy_test_manufacturer. Računanje traje nekoliko minuta, nakon čega će biti ispisani podaci na konzoli.
 
 # Treniranje
 
@@ -54,7 +56,7 @@ Potrebno je skinuti tensorflow models github repozitorijum sa https://github.com
 
 Za treniranje je korišćen dataset https://drive.google.com/drive/folders/1GS79qu6LL9NgS32D7HtUZ-FvdqGwj4Ny?usp=sharing sa ručno anotiranim alatima korišćenjem https://github.com/tzutalin/labelImg alata.  
 
-'test' i 'train' folderi sadrže slike i istoimene xml fajlove sa jednom ili više anotacija (u zavisnosti od broja alata na slici) iz skupa {elektro busilica, aku busilica, elektro brusilica, aku brusilica}.  
+'test' i 'train' folderi sadrže slike i istoimene xml fajlove sa jednom ili više anotacija (u zavisnosti od broja alata na slici) iz skupa {elektro busilica, aku busilica, elektro brusilica, aku brusilica, elektro ubodna testera, aku ubodna testera}.  
 
 
 Pozicionirati se u conda env tf15 sa komandom 'activate tf15' i nakon toga postaviti PYTHONPATH i PATH sa komandama 
@@ -101,4 +103,4 @@ Sada je potrebno promeniti putanje u fajlu 'faster_rcnn_inception_v2_pets.config
  ```
  python export_inference_graph.py --input_type image_tensor --pipeline_config_path training/faster_rcnn_inception_v2_pets.config --trained_checkpoint_prefix training/model.ckpt-XXXX --output_directory inference_graph
  ```
- Nakon toga, detektor je spreman sa korišćenje.
+ Nakon toga, detektor je spreman sa korišćenje. U slučaju ponovnog treniranja neophodno je obrisati sve fajlove is training osim labelmap.pbtxt i faster_rcnn_v2_pets.config, takođe obrisati sve fajlove iz foldera inference_graph. Nakon toga ponovo generisati csv fajlove i nastaviti narednim koracima.
