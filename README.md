@@ -44,7 +44,9 @@ U slučaju da se putanje foldera razlikuju od iznad naznačenih, promeniti ih u 
 
 Uneti komandu 'idle' u konzolu kako bi se otvorio novi python shell, otvoriti preko File->Open skriptu object_detection_image.py i pokrenuti je.  
 
-Ako je sve u redu, nakon desetak sekundi otvoriće se novi prozor sa slikom i označenim alatom. Za drugu ulaznu sliku potrebno je samo promeniti konstantu IMAGE_NAME u odgovarajuću sliku koja se nalazi u folderu skripte i ponovo pokrenuti skriptu, takođe radi na .png formatu.
+Ako je sve u redu, nakon desetak sekundi otvoriće se novi prozor sa slikom i označenim alatom. Za drugu ulaznu sliku potrebno je samo promeniti konstantu IMAGE_NAME u odgovarajuću sliku koja se nalazi u folderu skripte i ponovo pokrenuti skriptu, takođe radi na .png formatu.  
+
+Za računanje accuracy istrenirane mreže nad test skupom pokrenuti accuracy_test.py preko konzole. Računanje traje nekoliko minuta, nakon čega će biti ispisana na konzoli.
 
 # Treniranje
 
